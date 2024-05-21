@@ -18,9 +18,9 @@ The parquet-format repository hosts the official specification of the Apache Par
 As a repository focused on specification, the parquet-format repository does not contain source code. 
 
 
-### parquet-java
+### parquet-java 
 
-The parquet-java repository is part of the Apache Parquet project and specifically focuses on providing Java tools for handling the Parquet file format. Essentially, this repository includes all the necessary Java libraries and modules that allow developers to read and write Apache Parquet files.
+The parquet-java (formerly named 'parquet-mr') repository is part of the Apache Parquet project and specifically focuses on providing Java tools for handling the Parquet file format. Essentially, this repository includes all the necessary Java libraries and modules that allow developers to read and write Apache Parquet files.
 
 The parquet-java repository contains an implementation of the Apache Parquet format. There are a number of other Parquet format implementations, which are listed below. 
 
