@@ -19,9 +19,19 @@ at a time; this is not the IO chunk. We recommend 8KB for page sizes.&lt;/p></de
 &lt;li>Encodings: Encodings are specified by enum and more can be added in the future.&lt;/li>
 &lt;li>Page types: Additional page types can be added and safely skipped.&lt;/li>
 &lt;/ul></description></item><item><title>Docs: Metadata</title><link>/docs/file-format/metadata/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>/docs/file-format/metadata/</guid><description>
-&lt;p>There are three types of metadata: file metadata, column (chunk) metadata and page
-header metadata. All thrift structures are serialized using the TCompactProtocol.&lt;/p>
-&lt;p>&lt;img alt="File Layout" src="/images/FileFormat.gif">&lt;/p></description></item><item><title>Docs: Types</title><link>/docs/file-format/types/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>/docs/file-format/types/</guid><description>
+&lt;p>There are two types of metadata: file metadata, and page header metadata.&lt;/p>
+&lt;p>All thrift structures are serialized using the TCompactProtocol. The full
+definition of these structures is given in the Parquet
+&lt;a href="https://github.com/apache/parquet-format/blob/master/src/main/thrift/parquet.thrift">Thrift definition&lt;/a>.&lt;/p>
+&lt;h2 id="file-metadata">File metadata&lt;/h2>
+&lt;p>In the diagram below, file metadata is described by the &lt;code>FileMetaData&lt;/code>
+structure. This file metadata provides offset and size information useful
+when navigating the Parquet file.&lt;/p>
+&lt;p>&lt;img alt="Parquet Metadata format" src="/images/FileMetaData.svg">&lt;/p>
+&lt;h2 id="page-header">Page header&lt;/h2>
+&lt;p>Page header metadata (&lt;code>PageHeader&lt;/code> and children in the diagram) is stored
+in-line with the page data, and is used in the reading and decoding of data.&lt;/p>
+&lt;p>&lt;img alt="Parquet PageHeader format" src="/images/PageHeader.svg">&lt;/p></description></item><item><title>Docs: Types</title><link>/docs/file-format/types/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>/docs/file-format/types/</guid><description>
 &lt;p>The types supported by the file format are intended to be as minimal as possible,
 with a focus on how the types effect on disk storage. For example, 16-bit ints
 are not explicitly supported in the storage format since they are covered by
@@ -30,7 +40,7 @@ readers and writers for the format. The types are:&lt;/p>
 &lt;pre tabindex="0">&lt;code> - BOOLEAN: 1 bit boolean
 - INT32: 32 bit signed ints
 - INT64: 64 bit signed ints
-- INT96: 96 bit signed ints
+- INT96: 96 bit signed ints (deprecated; only used by legacy implementations)
 - FLOAT: IEEE 32-bit floating point values
 - DOUBLE: IEEE 64-bit floating point values
 - BYTE_ARRAY: arbitrarily long byte arrays
@@ -170,7 +180,7 @@ chosen as follows:&lt;/p>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">unsigned&lt;/span> &lt;span style="color:#000">int64&lt;/span> &lt;span style="color:#000">z_as_64_bit&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#000">z&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">unsigned&lt;/span> &lt;span style="color:#000">int32&lt;/span> &lt;span style="color:#000">i&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">h_top_bits&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">*&lt;/span> &lt;span style="color:#000">z_as_64_bit&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">&amp;gt;&amp;gt;&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">32&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The first line extracts the most significant 32 bits from &lt;code>h&lt;/code> and
-assignes them to a 64-bit unsigned integer. The second line is
+assigns them to a 64-bit unsigned integer. The second line is
 simpler: it just sets an unsigned 64-bit value to the same value as
 the 32-bit unsigned value &lt;code>z&lt;/code>. The purpose of having both &lt;code>h_top_bits&lt;/code>
 and &lt;code>z_as_64_bit&lt;/code> be 64-bit values is so that their product is a
@@ -206,7 +216,7 @@ unsigned int64 i = ((x &amp;gt;&amp;gt; 32) * filter.numberOfBlocks()) &amp;gt;&
 block b = filter.getBlock(i);
 return block_check(b, (unsigned int32)x)
 }
-&lt;/code>&lt;/pre>&lt;p>The use of blocks is from Putze et al.&amp;rsquo;s &lt;a href="http://algo2.iti.kit.edu/documents/cacheefficientbloomfilters-jea.pdf">Cache-, Hash- and
+&lt;/code>&lt;/pre>&lt;p>The use of blocks is from Putze et al.&amp;rsquo;s &lt;a href="https://www.cs.amherst.edu/~ccmcgeoch/cs34/papers/cacheefficientbloomfilters-jea.pdf">Cache-, Hash- and
 Space-Efficient Bloom
 filters&lt;/a>&lt;/p>
 &lt;p>To use an SBBF for values of arbitrary Parquet types, we apply a hash
@@ -217,13 +227,13 @@ with a seed of 0 and &lt;a href="https://github.com/Cyan4973/xxHash/blob/v0.7.0/
 &lt;h4 id="sizing-an-sbbf">Sizing an SBBF&lt;/h4>
 &lt;p>The &lt;code>check&lt;/code> operation in SBBFs can return &lt;code>true&lt;/code> for an argument that
 was never inserted into the SBBF. These are called &amp;ldquo;false
-positives&amp;rdquo;. The &amp;ldquo;false positive probabilty&amp;rdquo; is the probability that
+positives&amp;rdquo;. The &amp;ldquo;false positive probability&amp;rdquo; is the probability that
 any given hash value that was never &lt;code>insert&lt;/code>ed into the SBBF will
 cause &lt;code>check&lt;/code> to return &lt;code>true&lt;/code> (a false positive). There is not a
 simple closed-form calculation of this probability, but here is an
 example:&lt;/p>
 &lt;p>A filter that uses 1024 blocks and has had 26,214 hash values
-&lt;code>insert&lt;/code>ed will have a false positive probabilty of around 1.26%. Each
+&lt;code>insert&lt;/code>ed will have a false positive probability of around 1.26%. Each
 of those 1024 blocks occupies 256 bits of space, so the total space
 usage is 262,144. That means that the ratio of bits of space to hash
 values is 10-to-1. Adding more hash values increases the denominator
@@ -435,4 +445,728 @@ indices, and page offsets to scan in each column. The reader can then
 initialize a scanner for each column and fast forward them to the start row of
 the scan.&lt;/p>
 &lt;p>The &lt;code>min_values&lt;/code> and &lt;code>max_values&lt;/code> are calculated based on the &lt;code>column_orders&lt;/code>
-field in the &lt;code>FileMetaData&lt;/code> struct of the footer.&lt;/p></description></item></channel></rss>
+field in the &lt;code>FileMetaData&lt;/code> struct of the footer.&lt;/p></description></item><item><title>Docs: Implementation status</title><link>/docs/file-format/implementationstatus/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>/docs/file-format/implementationstatus/</guid><description>
+&lt;p>This page summarizes the features supported by different Parquet
+implementations.&lt;/p>
+&lt;p>&lt;em>Note&lt;/em>: This is a work in progress and we would welcome help expanding its scope.&lt;/p>
+&lt;h3 id="legend">Legend&lt;/h3>
+&lt;p>The value in each box means:&lt;/p>
+&lt;ul>
+&lt;li>✅: supported&lt;/li>
+&lt;li>❌: not supported&lt;/li>
+&lt;li>(R/W): partial reader/writer only support&lt;/li>
+&lt;li>(blank) no data&lt;/li>
+&lt;/ul>
+&lt;p>Implementations:&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://github.com/apache/arrow/tree/main/cpp/src/parquet">arrow&lt;/a> (C++)&lt;/li>
+&lt;li>&lt;a href="https://github.com/apache/parquet-java">parquet-java&lt;/a> (Java)&lt;/li>
+&lt;li>&lt;a href="https://github.com/apache/arrow-go/tree/main/parquet">arrow-go&lt;/a> (Go)&lt;/li>
+&lt;li>&lt;a href="https://github.com/apache/arrow-rs/blob/main/parquet/README.md">arrow-rs&lt;/a> (Rust)&lt;/li>
+&lt;li>&lt;a href="https://github.com/rapidsai/cudf">cudf&lt;/a> (cuDF C++)&lt;/li>
+&lt;li>&lt;a href="https://github.com/hyparam/hyparquet">hyparquet&lt;/a> (JavaScript)&lt;/li>
+&lt;li>&lt;a href="https://github.com/duckdb/duckdb">duckdb&lt;/a> (C++)&lt;/li>
+&lt;/ul>
+&lt;h3 id="physical-types">Physical types&lt;/h3>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Data type&lt;/th>
+&lt;th>arrow&lt;/th>
+&lt;th>parquet-java&lt;/th>
+&lt;th>arrow-go&lt;/th>
+&lt;th>arrow-rs&lt;/th>
+&lt;th>cudf&lt;/th>
+&lt;th>hyparquet&lt;/th>
+&lt;th>duckdb&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>BOOLEAN&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>INT32&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>INT64&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>INT96 (1)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>FLOAT&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>DOUBLE&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>BYTE_ARRAY&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>FIXED_LEN_BYTE_ARRAY&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;ul>
+&lt;li>(1) This type is deprecated, but as of 2024 it&amp;rsquo;s common in currently produced parquet files&lt;/li>
+&lt;/ul>
+&lt;h3 id="logical-types">Logical types&lt;/h3>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Data type&lt;/th>
+&lt;th>arrow&lt;/th>
+&lt;th>parquet-java&lt;/th>
+&lt;th>arrow-go&lt;/th>
+&lt;th>arrow-rs&lt;/th>
+&lt;th>cudf&lt;/th>
+&lt;th>hyparquet&lt;/th>
+&lt;th>duckdb&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>STRING&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>ENUM&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅ (1)&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>UUID&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅ (1)&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>8, 16, 32, 64 bit signed and unsigned INT&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>DECIMAL (INT32)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>DECIMAL (INT64)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>DECIMAL (BYTE_ARRAY)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>DECIMAL (FIXED_LEN_BYTE_ARRAY)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>DATE&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>TIME (INT32)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>TIME (INT64)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>TIMESTAMP (INT64)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>INTERVAL&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅ (1)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>JSON&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅ (1)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅ (1)&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>BSON&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>✅ (1)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅ (1)&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>LIST&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>MAP&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>UNKNOWN (always null)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>FLOAT16&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅ (1)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;ul>
+&lt;li>(1) Only supported to use its annotated physical type&lt;/li>
+&lt;/ul>
+&lt;h3 id="encodings">Encodings&lt;/h3>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Encoding&lt;/th>
+&lt;th>arrow&lt;/th>
+&lt;th>parquet-java&lt;/th>
+&lt;th>arrow-go&lt;/th>
+&lt;th>arrow-rs&lt;/th>
+&lt;th>cudf&lt;/th>
+&lt;th>hyparquet&lt;/th>
+&lt;th>duckdb&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>PLAIN&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>PLAIN_DICTIONARY&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>RLE_DICTIONARY&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>RLE&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>BIT_PACKED (deprecated)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>❌ (1)&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>DELTA_BINARY_PACKED&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>DELTA_LENGTH_BYTE_ARRAY&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>DELTA_BYTE_ARRAY&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>BYTE_STREAM_SPLIT&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;ul>
+&lt;li>(1) Partial read support, but only in the case of level data with a bitwidth of 0&lt;/li>
+&lt;/ul>
+&lt;h3 id="compressions">Compressions&lt;/h3>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Compression&lt;/th>
+&lt;th>arrow&lt;/th>
+&lt;th>parquet-java&lt;/th>
+&lt;th>arrow-go&lt;/th>
+&lt;th>arrow-rs&lt;/th>
+&lt;th>cudf&lt;/th>
+&lt;th>hyparquet&lt;/th>
+&lt;th>duckdb&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>UNCOMPRESSED&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>BROTLI&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>GZIP&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>LZ4 (deprecated)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>LZ4_RAW&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>LZO&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>SNAPPY&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>ZSTD&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h3 id="other-format-level-features">Other format level features&lt;/h3>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Feature&lt;/th>
+&lt;th>arrow&lt;/th>
+&lt;th>parquet-java&lt;/th>
+&lt;th>arrow-go&lt;/th>
+&lt;th>arrow-rs&lt;/th>
+&lt;th>cudf&lt;/th>
+&lt;th>hyparquet&lt;/th>
+&lt;th>duckdb&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>xxHash-based bloom filters&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Bloom filter length (1)&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Statistics min_value, max_value&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Page index&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Page CRC32 checksum&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Modular encryption&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>✅ (*)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Size statistics (2)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;ul>
+&lt;li>
+&lt;p>(1) In parquet.thrift: ColumnMetaData-&amp;gt;bloom_filter_length&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>(2) In parquet.thrift: ColumnMetaData-&amp;gt;size_statistics&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>(*) Partial support&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="high-level-data-apis-for-parquet-feature-usage">High level data APIs for Parquet feature usage&lt;/h3>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Feature&lt;/th>
+&lt;th>arrow&lt;/th>
+&lt;th>parquet-java&lt;/th>
+&lt;th>arrow-go&lt;/th>
+&lt;th>arrow-rs&lt;/th>
+&lt;th>cudf&lt;/th>
+&lt;th>hyparquet&lt;/th>
+&lt;th>duckdb&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>External column data (1)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>(W)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Row group &amp;ldquo;Sorting column&amp;rdquo; metadata (2)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>(W)&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Row group pruning using statistics&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅ (*)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Row group pruning using bloom filter&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅ (*)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Reading select columns only&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Page pruning using statistics&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅ (*)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;ul>
+&lt;li>
+&lt;p>(1) In parquet.thrift: ColumnChunk-&amp;gt;file_path&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>(2) In parquet.thrift: RowGroup-&amp;gt;sorting_columns&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>(*) Partial Support&lt;/p>
+&lt;/li>
+&lt;/ul></description></item></channel></rss>

@@ -30,7 +30,7 @@ as this has historically not been supported by all implementations, it is recomm
 that writers refrain from creating such pages by default for better interoperability.&lt;/p>
 &lt;h3 id="lzo">LZO&lt;/h3>
 &lt;p>A codec based on or interoperable with the
-&lt;a href="http://www.oberhumer.com/opensource/lzo/">LZO compression library&lt;/a>.&lt;/p>
+&lt;a href="https://www.oberhumer.com/opensource/lzo/">LZO compression library&lt;/a>.&lt;/p>
 &lt;h3 id="brotli">BROTLI&lt;/h3>
 &lt;p>A codec based on the Brotli format defined by
 &lt;a href="https://tools.ietf.org/html/rfc7932">RFC 7932&lt;/a>.
@@ -49,12 +49,12 @@ switch to the newer, interoperable &lt;code>LZ4_RAW&lt;/code> codec.&lt;/p>
 &lt;p>A codec based on the Zstandard format defined by
 &lt;a href="https://tools.ietf.org/html/rfc8478">RFC 8478&lt;/a>. If any ambiguity arises
 when implementing this format, the implementation provided by the
-&lt;a href="https://facebook.github.io/zstd/">ZStandard compression library&lt;/a>
+&lt;a href="https://facebook.github.io/zstd/">Zstandard compression library&lt;/a>
 is authoritative.&lt;/p>
 &lt;h3 id="lz4_raw">LZ4_RAW&lt;/h3>
 &lt;p>A codec based on the &lt;a href="https://github.com/lz4/lz4/blob/dev/doc/lz4_Block_format.md">LZ4 block format&lt;/a>.
 If any ambiguity arises when implementing this format, the implementation
-provided by the &lt;a href="http://www.lz4.org/">LZ4 compression library&lt;/a> is authoritative.&lt;/p></description></item><item><title>Docs: Encodings</title><link>/docs/file-format/data-pages/encodings/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>/docs/file-format/data-pages/encodings/</guid><description>
+provided by the &lt;a href="https://www.lz4.org/">LZ4 compression library&lt;/a> is authoritative.&lt;/p></description></item><item><title>Docs: Encodings</title><link>/docs/file-format/data-pages/encodings/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>/docs/file-format/data-pages/encodings/</guid><description>
 &lt;p>&lt;a name="PLAIN">&lt;/a>&lt;/p>
 &lt;h3 id="plain-plain--0">Plain: (PLAIN = 0)&lt;/h3>
 &lt;p>Supported Types: all&lt;/p>
@@ -180,7 +180,7 @@ repetition and definition levels.&lt;/p>
 &lt;h3 id="delta-encoding-delta_binary_packed--5">Delta Encoding (DELTA_BINARY_PACKED = 5)&lt;/h3>
 &lt;p>Supported Types: INT32, INT64&lt;/p>
 &lt;p>This encoding is adapted from the Binary packing described in
-&lt;a href="http://arxiv.org/pdf/1209.2137v5.pdf">&amp;ldquo;Decoding billions of integers per second through vectorization&amp;rdquo;&lt;/a>
+&lt;a href="https://arxiv.org/pdf/1209.2137v5.pdf">&amp;ldquo;Decoding billions of integers per second through vectorization&amp;rdquo;&lt;/a>
 by D. Lemire and L. Boytsov.&lt;/p>
 &lt;p>In delta encoding we make use of variable length integers for storing various
 numbers (not the deltas themselves). For unsigned values, we use ULEB128,
@@ -206,7 +206,7 @@ stored as a ULEB128 int&lt;/li>
 positive integers for bit packing)&lt;/li>
 &lt;li>the bitwidth of each block is stored as a byte&lt;/li>
 &lt;li>each miniblock is a list of bit packed ints according to the bit width
-stored at the begining of the block&lt;/li>
+stored at the beginning of the block&lt;/li>
 &lt;/ul>
 &lt;p>To encode a block, we will:&lt;/p>
 &lt;ol>
@@ -483,7 +483,7 @@ data set (table). This string is optionally passed by a writer upon file creatio
 the AAD prefix is stored in an &lt;code>aad_prefix&lt;/code> field in the file, and is made available to the readers.
 This field is not encrypted. If a user is concerned about keeping the file identity inside the file,
 the writer code can explicitly request Parquet not to store the AAD prefix. Then the aad_prefix field
-will be empty; AAD prefixes must be fully managed by the caller code and supplied explictly to Parquet
+will be empty; AAD prefixes must be fully managed by the caller code and supplied explicitly to Parquet
 readers for each file.&lt;/p>
 &lt;p>The protection against swapping full files is optional. It is not enabled by default because
 it requires the writers to generate and pass an AAD prefix.&lt;/p>
@@ -838,16 +838,17 @@ algorithm (no 16-byte tag in AES_GCM_CTR_V1) and with page configuration or data
 &lt;p>The throughput overhead of Parquet modular encryption depends on whether AES enciphering is
 done in software or hardware. In both cases, performing encryption on full pages (~1MB buffers)
 instead of on much smaller individual data values causes AES to work at its maximal speed.&lt;/p></description></item><item><title>Docs: License</title><link>/docs/asf/license/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>/docs/asf/license/</guid><description>
-&lt;p>&lt;a href="https://www.apache.org/licenses/">License&lt;/a>&lt;/p></description></item><item><title>Docs: Modules</title><link>/docs/contribution-guidelines/modules/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>/docs/contribution-guidelines/modules/</guid><description>
-&lt;p>The &lt;a href="https://github.com/apache/parquet-format">parquet-format&lt;/a> project contains format specifications and Thrift definitions of metadata required to properly read Parquet files.&lt;/p>
-&lt;p>The &lt;a href="https://github.com/apache/parquet-mr">parquet-mr&lt;/a> project contains multiple sub-modules, which implement the core components of reading and writing a nested, column-oriented data stream, map this core onto the parquet format, and provide Hadoop Input/Output Formats, Pig loaders, and other Java-based utilities for interacting with Parquet.&lt;/p>
-&lt;p>The &lt;a href="https://arrow.apache.org/docs/cpp/parquet.html">parquet-cpp&lt;/a> project is a C++ library to read-write Parquet files. It is part of the &lt;a href="https://arrow.apache.org/">Apache Arrow&lt;/a> C++ implementation, with bindings to Python, R, Ruby and C/GLib.&lt;/p>
-&lt;p>The &lt;a href="https://github.com/apache/arrow-rs/tree/master/parquet">parquet-rs&lt;/a> project is a Rust library to read-write Parquet files.&lt;/p>
-&lt;p>The &lt;a href="https://github.com/Parquet/parquet-compatibility">parquet-compatibility&lt;/a> project (deprecated) contains compatibility tests that can be used to verify that implementations in different languages can read and write each other’s files. As of January 2022 compatibility tests only exist up to version 1.2.0.&lt;/p></description></item><item><title>Docs: Spark Summit 2020</title><link>/docs/learning-resources/presentations/spark-summit-2020/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>/docs/learning-resources/presentations/spark-summit-2020/</guid><description>
+&lt;p>&lt;a href="https://www.apache.org/licenses/">License&lt;/a>&lt;/p></description></item><item><title>Docs: Spark Summit 2020</title><link>/docs/learning-resources/presentations/spark-summit-2020/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>/docs/learning-resources/presentations/spark-summit-2020/</guid><description>
 &lt;p>&lt;a href="https://www.slideshare.net/databricks/the-apache-spark-file-format-ecosystem">Slides&lt;/a>&lt;/p>
 &lt;div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
 &lt;iframe src="https://www.youtube.com/embed/auNAzC3AU18" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen title="YouTube Video">&lt;/iframe>
-&lt;/div></description></item><item><title>Docs: Building Parquet</title><link>/docs/contribution-guidelines/building/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>/docs/contribution-guidelines/building/</guid><description>
+&lt;/div></description></item><item><title>Docs: Sub-Projects</title><link>/docs/contribution-guidelines/sub-projects/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>/docs/contribution-guidelines/sub-projects/</guid><description>
+&lt;p>The &lt;a href="https://github.com/apache/parquet-format">parquet-format&lt;/a> project contains format specifications and Thrift definitions of metadata required to properly read Parquet files.&lt;/p>
+&lt;p>The &lt;a href="https://github.com/apache/parquet-java">parquet-java&lt;/a> project is a Java library to read and write Parquet files. It consists of multiple sub-modules, which implement the core components of reading and writing a nested, column-oriented data stream, to and from the Parquet format, along with Hadoop Input/Output Formats, Pig loaders, and other Java-based utilities for interacting with Parquet.&lt;/p>
+&lt;p>The &lt;a href="https://arrow.apache.org/docs/cpp/parquet.html">parquet-cpp&lt;/a> project is a C++ library to read-write Parquet files. It is part of the &lt;a href="https://arrow.apache.org/">Apache Arrow&lt;/a> C++ implementation, with bindings to Python, R, Ruby and C/GLib.&lt;/p>
+&lt;p>The &lt;a href="https://github.com/apache/arrow-rs/tree/main/parquet">parquet-rs&lt;/a> project is a Rust library to read-write Parquet files.&lt;/p>
+&lt;p>The &lt;a href="https://github.com/apache/arrow-go/tree/main/parquet">parquet-go&lt;/a> project is a Golang library to read-write Parquet files. It is part of the &lt;a href="https://arrow.apache.org/">Apache Arrow&lt;/a> Go implementation.&lt;/p>
+&lt;p>The &lt;a href="https://github.com/Parquet/parquet-compatibility">parquet-compatibility&lt;/a> project (deprecated) contains compatibility tests that can be used to verify that implementations in different languages can read and write each other’s files. As of January 2022 compatibility tests only exist up to version 1.2.0.&lt;/p></description></item><item><title>Docs: Building Parquet</title><link>/docs/contribution-guidelines/building/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>/docs/contribution-guidelines/building/</guid><description>
 &lt;p>Building
 Java resources can be build using &lt;code>mvn package&lt;/code>. The current stable version should always be available from Maven Central.&lt;/p>
 &lt;p>C++ thrift resources can be generated via make.&lt;/p>
@@ -863,72 +864,57 @@ Java resources can be build using &lt;code>mvn package&lt;/code>. The current st
 &lt;p>&lt;a href="https://www.apache.org/security/">Security&lt;/a>&lt;/p></description></item><item><title>Docs: #CONF 2014</title><link>/docs/learning-resources/presentations/conf-2014-parquet-summit-twitter/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>/docs/learning-resources/presentations/conf-2014-parquet-summit-twitter/</guid><description>
 &lt;div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
 &lt;iframe src="https://www.youtube.com/embed/Qfp6Uv1UrA0" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen title="YouTube Video">&lt;/iframe>
-&lt;/div></description></item><item><title>Docs: Contributing to Parquet</title><link>/docs/contribution-guidelines/contributing/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>/docs/contribution-guidelines/contributing/</guid><description>
+&lt;/div></description></item><item><title>Docs: Contributing to Parquet-Java</title><link>/docs/contribution-guidelines/contributing/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>/docs/contribution-guidelines/contributing/</guid><description>
 &lt;h2 id="pull-requests">Pull Requests&lt;/h2>
-&lt;p>We prefer to receive contributions in the form of GitHub pull requests. Please send pull requests against the &lt;a href="https://github.com/apache/parquet-mr">github.com/apache/parquet-mr&lt;/a> repository. If you’ve previously forked Parquet from its old location, you will need to add a remote or update your origin remote to &lt;a href="https://github.com/apache/parquet-mr.git">https://github.com/apache/parquet-mr.git&lt;/a> Here are a few tips to get your contribution in:&lt;/p>
+&lt;p>We prefer to receive contributions in the form of GitHub pull requests. Please send pull requests against the &lt;a href="https://github.com/apache/parquet-java">github.com/apache/parquet-java&lt;/a> repository. If you’ve previously forked Parquet from its old location, you will need to add a remote or update your origin remote to &lt;a href="https://github.com/apache/parquet-java.git">https://github.com/apache/parquet-java.git&lt;/a>. Here are a few tips to get your contribution in:&lt;/p>
 &lt;ol>
 &lt;li>Break your work into small, single-purpose patches if possible. It’s much harder to merge in a large change with a lot of disjoint features.&lt;/li>
-&lt;li>Create a JIRA for your patch on the &lt;a href="https://issues.apache.org/jira/browse/PARQUET">Parquet Project JIRA&lt;/a>.&lt;/li>
-&lt;li>Submit the patch as a GitHub pull request against the master branch. For a tutorial, see the GitHub guides on forking a repo and sending a pull request. Prefix your pull request name with the JIRA name (ex: &lt;a href="https://github.com/apache/parquet-mr/pull/5">https://github.com/apache/parquet-mr/pull/5&lt;/a>).&lt;/li>
+&lt;li>Create an Issue on the &lt;a href="https://github.com/apache/parquet-java/issues">Parquet-Java issues&lt;/a>.&lt;/li>
+&lt;li>Submit the patch as a GitHub pull request against the master branch. For a tutorial, see the GitHub guides on forking a repo and sending a pull request. Prefix your pull request name with the Issue &lt;code>GH-2935&lt;/code>: (ex: &lt;a href="https://github.com/apache/parquet-java/pull/2951">https://github.com/apache/parquet-java/pull/2951&lt;/a>).&lt;/li>
 &lt;li>Make sure that your code passes the unit tests. You can run the tests with &lt;code>mvn test&lt;/code> in the root directory.&lt;/li>
 &lt;li>Add new unit tests for your code.&lt;/li>
-&lt;li>All Pull Requests are tested automatically on &lt;a href="https://github.com/apache/parquet-mr/actions">GitHub Actions&lt;/a>. &lt;a href="https://travis-ci.org/github/apache/parquet-mr">TravisCI&lt;/a> is also used to run the tests on ARM64 CPU architecture&lt;/li>
+&lt;li>All Pull Requests are tested automatically on &lt;a href="https://github.com/apache/parquet-java/actions">GitHub Actions&lt;/a>.&lt;/li>
 &lt;/ol>
-&lt;p>If you’d like to report a bug but don’t have time to fix it, you can still post it to our &lt;a href="https://issues.apache.org/jira/browse/PARQUET">issue tracker&lt;/a>, or email the mailing list (&lt;a href="mailto:dev@parquet.apache.org">dev@parquet.apache.org&lt;/a>).&lt;/p>
+&lt;p>If you’d like to report a bug but don’t have time to fix it, you can still &lt;a href="https://github.com/apache/parquet-java/issues">raise an issue&lt;/a>, or email the mailing list (&lt;a href="mailto:dev@parquet.apache.org">dev@parquet.apache.org&lt;/a>).&lt;/p>
 &lt;h2 id="committers">Committers&lt;/h2>
-&lt;p>Merging a pull request requires being a comitter on the project.&lt;/p>
-&lt;p>How to merge a Pull request (have an apache and github-apache remote setup):&lt;/p>
-&lt;pre>&lt;code>git remote add github-apache git@github.com:apache/parquet-mr.git
-git remote add apache https://gitbox.apache.org/repos/asf?p=parquet-mr.git
-&lt;/code>&lt;/pre>
-&lt;p>run the following command&lt;/p>
-&lt;pre>&lt;code>dev/merge_parquet_pr.py
-&lt;/code>&lt;/pre>
-&lt;p>example output:&lt;/p>
-&lt;pre>&lt;code>Which pull request would you like to merge? (e.g. 34):
-&lt;/code>&lt;/pre>
-&lt;p>Type the pull request number (from &lt;a href="https://github.com/apache/parquet-mr/pulls">https://github.com/apache/parquet-mr/pulls&lt;/a>) and hit enter.&lt;/p>
-&lt;pre>&lt;code>=== Pull Request #X ===
-title Blah Blah Blah
-source repo/branch
-target master
-url https://api.github.com/repos/apache/parquet-mr/pulls/X
-Proceed with merging pull request #3? (y/n):
-&lt;/code>&lt;/pre>
-&lt;p>If this looks good, type &lt;code>y&lt;/code> and hit enter.&lt;/p>
-&lt;pre>&lt;code>From gitbox.apache.org:/repos/asf/parquet-mr.git
-* [new branch] master -&amp;gt; PR_TOOL_MERGE_PR_3_MASTER
-Switched to branch 'PR_TOOL_MERGE_PR_3_MASTER'
-Merge complete (local ref PR_TOOL_MERGE_PR_3_MASTER). Push to apache? (y/n):
-&lt;/code>&lt;/pre>
-&lt;p>A local branch with the merge has been created. Type &lt;code>y&lt;/code> and hit enter to push it to apache master&lt;/p>
-&lt;pre>&lt;code>Counting objects: 67, done.
-Delta compression using up to 4 threads.
-Compressing objects: 100% (26/26), done.
-Writing objects: 100% (36/36), 5.32 KiB, done.
-Total 36 (delta 17), reused 0 (delta 0)
-To gitbox.apache.org:/repos/asf/parquet-mr.git
-b767ac4..485658a PR_TOOL_MERGE_PR_X_MASTER -&amp;gt; master
-Restoring head pointer to b767ac4e
-Note: checking out 'b767ac4e'.
-You are in 'detached HEAD' state. You can look around, make experimental
-changes and commit them, and you can discard any commits you make in this
-state without impacting any branches by performing another checkout.
-If you want to create a new branch to retain commits you create, you may
-do so (now or later) by using -b with the checkout command again. Example:
-git checkout -b new_branch_name
-HEAD is now at b767ac4... Update README.md
-Deleting local branch PR_TOOL_MERGE_PR_X
-Deleting local branch PR_TOOL_MERGE_PR_X_MASTER
-Pull request #X merged!
-Merge hash: 485658a5
-Would you like to pick 485658a5 into another branch? (y/n):
-&lt;/code>&lt;/pre>
-&lt;p>For now just say &lt;code>n&lt;/code> as we have 1 branch&lt;/p>
-&lt;h2 id="website">Website&lt;/h2>
+&lt;h3 id="merging-a-pull-request">Merging a Pull Request&lt;/h3>
+&lt;p>Merging a pull request requires being a committer on the project and approval of the PR by a committer who is not the author.&lt;/p>
+&lt;p>A pull request can be merged through the GitHub UI. By default, only &lt;a href="https://github.com/apache/parquet-java/blob/824b7d009eb41539cb0e2f73110efc0ac5694251/.asf.yaml#L29">squash and merge&lt;/a> is enabled on the project.&lt;/p>
+&lt;p>When the PR solves an existing issue, ensure that it references the issue in the Pull-Request template &lt;code>Closes #1234&lt;/code>. This way the issue is linked to the PR, and GitHub will automatically close the relevant issue when the PR is being merged.&lt;/p>
+&lt;h3 id="semantic-versioning">Semantic versioning&lt;/h3>
+&lt;p>Parquet-Java leverages &lt;a href="https://semver.org/#semantic-versioning-200">semantic versioning&lt;/a> to ensure compatibility for developers and users of the libraries as APIs and implementations evolve. The Maven plugin &lt;a href="https://github.com/siom79/japicmp">&lt;code>japicmp&lt;/code>&lt;/a> enforces this, and will fail when an API is being changed without going through the correct deprecation cycle. This includes for all the modules, excluding: &lt;code>parquet-benchmarks&lt;/code>, &lt;code>parquet-cli&lt;/code>, &lt;code>parquet-tools&lt;/code>, &lt;code>parquet-format-structures&lt;/code>, &lt;code>parquet-hadoop-bundle&lt;/code> and &lt;code>parquet-pig-bundle&lt;/code>.&lt;/p>
+&lt;p>All interfaces, classes, and methods targeted for deprecation must include the following:&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>@Deprecated&lt;/code> annotation on the appropriate element&lt;/li>
+&lt;li>&lt;code>@depreceted&lt;/code> javadoc comment including: the version for removal, the appropriate alternative for usage&lt;/li>
+&lt;li>Replacement of existing code paths that use the deprecated behavior&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-java" data-lang="java">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic">/**
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"> * @param c the current class
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"> * @return the corresponding logger
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"> * @deprecated will be removed in 2.0.0; use org.slf4j.LoggerFactory instead.
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#8f5902;font-style:italic"> */&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>&lt;span style="color:#5c35cc;font-weight:bold">@Deprecated&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>&lt;span style="color:#204a87;font-weight:bold">public&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">static&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">Log&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">getLog&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">Class&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">&amp;lt;?&amp;gt;&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">c&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000;font-weight:bold">{&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">return&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">new&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">Log&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">c&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>&lt;span style="color:#000;font-weight:bold">}&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Checking for API violations can be done by running &lt;code>mvn verify -Dmaven.test.skip=true japicmp:cmp&lt;/code>.&lt;/p>
+&lt;h3 id="tracking-issues-using-milestones">Tracking issues using Milestones&lt;/h3>
+&lt;p>When a PR is raised that fixes a bug, or a feature that you want to target a certain version, make sure to attach a &lt;a href="https://github.com/apache/parquet-java/milestones">milestone&lt;/a>. This way other committers can track certain versions, and see what is still pending. For information on the actual release, please check &lt;a href="/docs/contribution-guidelines/releasing/">the release page&lt;/a>.&lt;/p>
+&lt;h3 id="maintenance-branches">Maintenance branches&lt;/h3>
+&lt;p>Once a PR has been merged to master, it can be that the commit needs to be backported to maintenance &lt;a href="https://github.com/apache/parquet-java/branches">branches&lt;/a>, (ex: &lt;a href="https://github.com/apache/parquet-java/tree/parquet-1.14.x">1.14.x&lt;/a>). The easiest way is to do this locally:&lt;/p>
+&lt;p>Make sure that the remote is set up correctly:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>git remote add github-apache git@github.com:apache/parquet-java.git
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Now you can cherry-pick a PR to a previous branch:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>get fetch --all
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>git checkout parquet-1.14.x
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>git reset --hard github-apache/parquet-1.14.x
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>git cherry-pick &amp;lt;hash-from-the-commit&amp;gt;
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>git push github-apache/parquet-1.14.x
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="website">Website&lt;/h2>
 &lt;h3 id="release-documentation">Release Documentation&lt;/h3>
 &lt;p>To create documentation for a new release of &lt;code>parquet-format&lt;/code> create a new &lt;releaseNumber>.md file under &lt;code>content/en/blog/parquet-format&lt;/code>. Please see existing files in that directory as an example.&lt;/p>
-&lt;p>To create documentation for a new release of &lt;code>parquet-mr&lt;/code> create a new &lt;releaseNumber>.md file under &lt;code>content/en/blog/parquet-mr&lt;/code>. Please see existing files in that directory as an example.&lt;/p>
+&lt;p>To create documentation for a new release of &lt;code>parquet-java&lt;/code> create a new &lt;releaseNumber>.md file under &lt;code>content/en/blog/parquet-java&lt;/code>. Please see existing files in that directory as an example.&lt;/p>
 &lt;h3 id="website-development-and-deployment">Website development and deployment&lt;/h3>
 &lt;h4 id="staging">Staging&lt;/h4>
 &lt;p>To make a change to the &lt;code>staging&lt;/code> version of the website:&lt;/p>
@@ -947,43 +933,35 @@ job in the &lt;a href="https://github.com/apache/parquet-site/blob/production/.g
 &lt;/ol>
 &lt;p>&lt;strong>Do not directly edit the &lt;code>asf-site&lt;/code> branch of this repo&lt;/strong>&lt;/p></description></item><item><title>Docs: Sponsor</title><link>/docs/asf/sponsor/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>/docs/asf/sponsor/</guid><description>
 &lt;p>&lt;a href="https://www.apache.org/foundation/thanks.html">Sponsor&lt;/a>&lt;/p></description></item><item><title>Docs: Donate</title><link>/docs/asf/donate/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>/docs/asf/donate/</guid><description>
-&lt;p>&lt;a href="https://www.apache.org/foundation/sponsorship.html">Donate&lt;/a>&lt;/p></description></item><item><title>Docs: Releasing Parquet</title><link>/docs/contribution-guidelines/releasing/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>/docs/contribution-guidelines/releasing/</guid><description>
+&lt;p>&lt;a href="https://www.apache.org/foundation/sponsorship.html">Donate&lt;/a>&lt;/p></description></item><item><title>Docs: Releasing Parquet-Java</title><link>/docs/contribution-guidelines/releasing/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>/docs/contribution-guidelines/releasing/</guid><description>
 &lt;h3 id="setup">Setup&lt;/h3>
-&lt;p>You will need: * PGP code signing keys, published in &lt;a href="https://downloads.apache.org/parquet/KEYS">KEYS&lt;/a> * Permission to stage artifacts in Nexus&lt;/p>
-&lt;p>Make sure you have permission to deploy Parquet artifacts to Nexus by pushing a snapshot:&lt;/p>
-&lt;pre>&lt;code>mvn deploy
-&lt;/code>&lt;/pre>
-&lt;p>If you have problems, read the &lt;a href="https://www.apache.org/dev/publishing-maven-artifacts.html">publishing Maven artifacts documentation&lt;/a>&lt;/p>
-&lt;h3 id="release-process">Release process&lt;/h3>
-&lt;p>Parquet uses the maven-release-plugin to tag a release and push binary artifacts to staging in Nexus. Once maven completes the release, the offical source tarball is built from the tag.&lt;/p>
-&lt;p>Before you start the release process:&lt;/p>
-&lt;ol>
-&lt;li>Verify that the release is finished (no planned JIRAs are pending and all patches are cherry-picked to the release branch)&lt;/li>
-&lt;li>Resolve all associated JIRAs with correct target version and create the next unreleased version in the JIRA project&lt;/li>
-&lt;li>Build and test the project&lt;/li>
-&lt;li>Create a new branch for the release if this is a new minor version. For example, if the new minor version is 1.13.0, create a new branch &lt;code>parquet-1.13.x&lt;/code>&lt;/li>
-&lt;li>Update the change log
+&lt;p>N.B. The mechanics of releasing parquet-format is the same (e.g. setting up keys, branching, votes, etc)&lt;/p>
+&lt;p>You will need:&lt;/p>
 &lt;ul>
-&lt;li>Go to the release notes for the release in JIRA&lt;/li>
-&lt;li>Copy the HTML and convert it to markdown with an &lt;a href="https://domchristie.github.io/turndown/">online converter&lt;/a>&lt;/li>
-&lt;li>Add the content to CHANGES.md and update formatting&lt;/li>
-&lt;li>Commit the update to CHANGES.md and make sure it is committed to both release and master branches&lt;/li>
+&lt;li>PGP code signing keys, published in &lt;a href="https://downloads.apache.org/parquet/KEYS">KEYS&lt;/a>.&lt;/li>
+&lt;li>Permission to stage artifacts in &lt;a href="https://repository.apache.org/">Nexus&lt;/a>.&lt;/li>
 &lt;/ul>
-&lt;/li>
+&lt;p>Make sure you have permission to deploy Parquet artifacts to Nexus by pushing a snapshot:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>mvn deploy
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>If you have problems, read the &lt;a href="https://www.apache.org/dev/publishing-maven-artifacts.html">publishing Maven artifacts documentation&lt;/a>.&lt;/p>
+&lt;h3 id="release-process">Release process&lt;/h3>
+&lt;p>Parquet uses the maven-release-plugin to tag a release and push binary artifacts to staging in Nexus. Once maven completes the release, the official source tarball is built from the tag.&lt;/p>
+&lt;h4 id="0-before-you-start-the-release-process">0. Before you start the release process&lt;/h4>
+&lt;ol>
+&lt;li>Verify that the release is finished (no planned Issues/PRs are pending &lt;a href="https://github.com/apache/parquet-java/milestones">on the milestone&lt;/a>)&lt;/li>
+&lt;li>Build and test the project&lt;/li>
+&lt;li>Create a new branch for the release if this is a new minor version. For example, if the new minor version is 1.14.0, create a new branch &lt;code>parquet-1.14.x&lt;/code>&lt;/li>
 &lt;/ol>
 &lt;h4 id="1-run-the-prepare-script">1. Run the prepare script&lt;/h4>
-&lt;pre>&lt;code>dev/prepare-release.sh &amp;lt;version&amp;gt; &amp;lt;rc-number&amp;gt;
-&lt;/code>&lt;/pre>
-&lt;p>This runs maven’s release prepare with a consistent tag name. After this step, the release tag will exist in the git repository.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>./dev/prepare-release.sh &amp;lt;version&amp;gt; &amp;lt;rc-number&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This runs maven’s release prepare with a consistent tag name. After this step, the release tag will exist in the git repository.&lt;/p>
 &lt;p>If this step fails, you can roll back the changes by running these commands.&lt;/p>
-&lt;pre>&lt;code>find ./ -type f -name '*.releaseBackup' -exec rm {} \;
-find ./ -type f -name 'pom.xml' -exec git checkout {} \;
-&lt;/code>&lt;/pre>
-&lt;h4 id="2-run-releaseperform-to-stage-binaries">2. Run release:perform to stage binaries&lt;/h4>
-&lt;pre>&lt;code>mvn release:perform
-&lt;/code>&lt;/pre>
-&lt;p>This uploads binary artifacts for the release tag to &lt;a href="https://repository.apache.org/">Nexus&lt;/a>.&lt;/p>
-&lt;h4 id="3-in-nexus-close-the-staging-repository">3. In Nexus, close the staging repository&lt;/h4>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>find ./ -type f -name &lt;span style="color:#4e9a06">&amp;#39;*.releaseBackup&amp;#39;&lt;/span> -exec rm &lt;span style="color:#ce5c00;font-weight:bold">{}&lt;/span> &lt;span style="color:#4e9a06">\;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>find ./ -type f -name &lt;span style="color:#4e9a06">&amp;#39;pom.xml&amp;#39;&lt;/span> -exec git checkout &lt;span style="color:#ce5c00;font-weight:bold">{}&lt;/span> &lt;span style="color:#4e9a06">\;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="2-run-releaseperform-to-stage-binaries">2. Run release:perform to stage binaries&lt;/h4>
+&lt;p>Upload binary artifacts for the release tag to &lt;a href="https://repository.apache.org/">Nexus&lt;/a>:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>mvn release:perform -DskipTests -Darguments&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>-DskipTests
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="3-in-nexus-close-the-staging-repository">3. In Nexus, close the staging repository&lt;/h4>
 &lt;p>Closing a staging repository makes the binaries available in &lt;a href="https://repository.apache.org/content/groups/staging/org/apache/parquet/">staging&lt;/a>, but does not publish them.&lt;/p>
 &lt;ol>
 &lt;li>Go to &lt;a href="https://repository.apache.org/">Nexus&lt;/a>.&lt;/li>
@@ -992,11 +970,12 @@ find ./ -type f -name 'pom.xml' -exec git checkout {} \;
 &lt;li>At the top, click “Close” and follow the instructions. For the comment use “Apache Parquet [Format] ”.&lt;/li>
 &lt;/ol>
 &lt;h4 id="4-run-the-source-tarball-script">4. Run the source tarball script&lt;/h4>
-&lt;pre>&lt;code>dev/source-release.sh &amp;lt;version&amp;gt; &amp;lt;rc-number&amp;gt;
-&lt;/code>&lt;/pre>
-&lt;p>This script builds the source tarball from the release tag’s SHA1, signs it, and uploads the necessary files with SVN.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>dev/source-release.sh &amp;lt;version&amp;gt; &amp;lt;rc-number&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This script builds the source tarball from the release tag’s SHA1, signs it, and uploads the necessary files with SVN.&lt;/p>
 &lt;p>The source release is pushed to &lt;a href="https://dist.apache.org/repos/dist/dev/parquet/">https://dist.apache.org/repos/dist/dev/parquet/&lt;/a>&lt;/p>
 &lt;p>The last message from the script is the release commit’s SHA1 hash and URL for the VOTE e-mail.&lt;/p>
+&lt;h3 id="5-prepare-the-pre-release">5. Prepare the pre-release&lt;/h3>
+&lt;p>Creating the &lt;a href="https://github.com/apache/parquet-java/releases/new">pre-release&lt;/a> will give the users the changelog to see if they need to validate certain functionality. First select the newly created &lt;code>rc&lt;/code> (ex: &lt;code>apache-parquet-1.15.0-rc0&lt;/code>) tag, and then the previous release (ex. &lt;code>apache-parquet-1.14.1&lt;/code>). Hit the &lt;code>Generate release notes&lt;/code> button to auto generate the notes. You can curate the notes a bit by removing unrelated changes (whitespace, test-only changes) and sorting them to make them easier to digest. Make sure to check the &lt;code>Set as pre-release&lt;/code> checkbox as this is a release candidate.&lt;/p>
 &lt;h4 id="5-send-a-vote-e-mail-to-devparquetapacheorgmailtodevparquetapacheorg">5. Send a VOTE e-mail to &lt;a href="mailto:dev@parquet.apache.org">dev@parquet.apache.org&lt;/a>&lt;/h4>
 &lt;p>Here is a template you can use. Make sure everything applies to your release.&lt;/p>
 &lt;pre>&lt;code>Subject: [VOTE] Release Apache Parquet &amp;lt;VERSION&amp;gt; RC&amp;lt;NUM&amp;gt;
@@ -1004,11 +983,13 @@ Hi everyone,
 I propose the following RC to be released as official Apache Parquet &amp;lt;VERSION&amp;gt; release.
 The commit id is &amp;lt;SHA1&amp;gt;
 * This corresponds to the tag: apache-parquet-&amp;lt;VERSION&amp;gt;-rc&amp;lt;NUM&amp;gt;
-* https://github.com/apache/parquet-mr/tree/&amp;lt;SHA1&amp;gt;
+* https://github.com/apache/parquet-java/tree/&amp;lt;SHA1&amp;gt;
 The release tarball, signature, and checksums are here:
 * https://dist.apache.org/repos/dist/dev/parquet/&amp;lt;PATH&amp;gt;
 You can find the KEYS file here:
 * https://downloads.apache.org/parquet/KEYS
+You can find the changelog here:
+https://github.com/apache/parquet-java/releases/tag/apache-parquet-&amp;lt;VERSION&amp;gt;-rc&amp;lt;NUM&amp;gt;
 Binary artifacts are staged in Nexus here:
 * https://repository.apache.org/content/groups/staging/org/apache/parquet/
 This release includes important changes that I should have summarized here, but I'm lazy.
@@ -1021,9 +1002,8 @@ Please vote in the next 72 hours.
 &lt;h3 id="publishing-after-the-vote-passes">Publishing after the vote passes&lt;/h3>
 &lt;p>After a release candidate passes a vote, the candidate needs to be published as the final release.&lt;/p>
 &lt;h4 id="1-tag-final-release-and-set-development-version">1. Tag final release and set development version&lt;/h4>
-&lt;pre>&lt;code>dev/finalize-release &amp;lt;release-version&amp;gt; &amp;lt;rc-num&amp;gt; &amp;lt;new-development-version-without-SNAPSHOT-suffix&amp;gt;
-&lt;/code>&lt;/pre>
-&lt;p>This will add the final release tag to the RC tag and sets the new development version in the pom files. If everything is fine push the changes and the new tag to github: &lt;code>git push --follow-tags&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>./dev/finalize-release &amp;lt;release-version&amp;gt; &amp;lt;rc-num&amp;gt; &amp;lt;new-development-version-without-SNAPSHOT-suffix&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This will add the final release tag to the RC tag and sets the new development version in the pom files. If everything is fine push the changes and the new tag to GitHub: &lt;code>git push --follow-tags&lt;/code>&lt;/p>
 &lt;h4 id="2-release-the-binary-repository-in-nexus">2. Release the binary repository in Nexus&lt;/h4>
 &lt;p>Releasing a binary repository publishes the binaries to &lt;a href="https://repository.apache.org/content/groups/public/org/apache/parquet/">public&lt;/a>.&lt;/p>
 &lt;ol>
@@ -1034,32 +1014,32 @@ Please vote in the next 72 hours.
 &lt;/ol>
 &lt;h4 id="3-copy-the-release-artifacts-in-svn-into-releases">3. Copy the release artifacts in SVN into releases&lt;/h4>
 &lt;p>First, check out the candidates and releases locations in SVN:&lt;/p>
-&lt;pre>&lt;code>mkdir parquet
-cd parquet
-svn co https://dist.apache.org/repos/dist/dev/parquet candidates
-svn co https://dist.apache.org/repos/dist/release/parquet releases
-&lt;/code>&lt;/pre>
-&lt;p>Next, copy the directory for the release candidate the passed from candidates to releases and rename it; remove the “-rcN” part of the directory name.&lt;/p>
-&lt;pre>&lt;code>cp -r candidates/apache-parquet-&amp;lt;VERSION&amp;gt;-rcN/ releases/apache-parquet-&amp;lt;VERSION&amp;gt;
-&lt;/code>&lt;/pre>
-&lt;p>Then add and commit the release artifacts:&lt;/p>
-&lt;pre>&lt;code>cd releases
-svn add apache-parquet-&amp;lt;version&amp;gt;
-svn ci -m &amp;quot;Parquet: Add release &amp;lt;VERSION&amp;gt;&amp;quot;
-&lt;/code>&lt;/pre>
-&lt;h4 id="4-update-parquetapacheorg">4. Update parquet.apache.org&lt;/h4>
-&lt;p>Update the downloads page on parquet.apache.org. Instructions for updating the site are on the &lt;a href="http://parquet.apache.org/docs/contribution-guidelines/contributing/">contribution page&lt;/a>.&lt;/p>
-&lt;h4 id="5-send-an-announce-e-mail-to-announceapacheorgmailtoannounceapacheorg-and-the-dev-list">5. Send an ANNOUNCE e-mail to &lt;a href="mailto:announce@apache.org">announce@apache.org&lt;/a> and the dev list&lt;/h4>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-sh" data-lang="sh">&lt;span style="display:flex;">&lt;span>svn mv https://dist.apache.org/repos/dist/dev/parquet/apache-parquet-&amp;lt;VERSION&amp;gt;-rcN/ https://dist.apache.org/repos/dist/release/parquet/apache-parquet-&amp;lt;VERSION&amp;gt; -m &lt;span style="color:#4e9a06">&amp;#34;Parquet: Add release &amp;lt;VERSION&amp;gt;&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="4-update-parquetapacheorg">4. Update parquet.apache.org&lt;/h4>
+&lt;p>Update the downloads page on parquet.apache.org. Instructions for updating the site are on the &lt;a href="https://parquet.apache.org/docs/contribution-guidelines/contributing/">contribution page&lt;/a>.&lt;/p>
+&lt;h3 id="5-add-the-release-to-github">5. Add the release to GitHub&lt;/h3>
+&lt;p>Add a &lt;a href="https://github.com/apache/parquet-java/releases/new">new release to GitHub&lt;/a>. First select the newly tag (ex: &lt;code>apache-parquet-1.15.0&lt;/code>), and then the previous release (ex. &lt;code>apache-parquet-1.14.1&lt;/code>). You can copy the release notes from the RC that passed the vote.&lt;/p>
+&lt;h4 id="6-send-an-announce-e-mail-to-announceapacheorgmailtoannounceapacheorg-and-the-dev-list">6. Send an ANNOUNCE e-mail to &lt;a href="mailto:announce@apache.org">announce@apache.org&lt;/a> and the dev list&lt;/h4>
 &lt;pre>&lt;code>[ANNOUNCE] Apache Parquet release &amp;lt;VERSION&amp;gt;
-I'm please to announce the release of Parquet &amp;lt;VERSION&amp;gt;!
+I'm pleased to announce the release of Parquet &amp;lt;VERSION&amp;gt;!
 Parquet is a general-purpose columnar file format for nested data. It uses
 space-efficient encodings and a compressed and splittable structure for
 processing frameworks like Hadoop.
-Changes are listed at: https://github.com/apache/parquet-mr/blob/apache-parquet-&amp;lt;VERSION&amp;gt;/CHANGES.md
+Changes are listed at: https://github.com/apache/parquet-java/releases/tag/apache-parquet-&amp;lt;VERSION&amp;gt;
 This release can be downloaded from: https://parquet.apache.org/downloads/
 Java artifacts are available from Maven Central.
 Thanks to everyone for contributing!
-&lt;/code>&lt;/pre></description></item><item><title>Docs: Strata 2013</title><link>/docs/learning-resources/presentations/strata-2013/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>/docs/learning-resources/presentations/strata-2013/</guid><description>
+&lt;/code>&lt;/pre>
+&lt;h4 id="6-update-parquet-format-with-feature-enablement-guidance">6. Update parquet-format with feature enablement guidance&lt;/h4>
+&lt;p>The recommendations for other feature enablement is generally tied to releases of
+parquet-java (details are in the parquet-format repo). As releases are made the
+specification should be updated to indicate the recommended dates for when a new
+feature may be enabled.&lt;/p>
+&lt;h3 id="release-cadence">Release Cadence&lt;/h3>
+&lt;p>Provided enough volunteers are available the Parquet community aims to have
+releases on a quarterly basis (Targets months are January, April, July and
+October). If a new major version is necessary it will be targetted for the
+October release.&lt;/p></description></item><item><title>Docs: Strata 2013</title><link>/docs/learning-resources/presentations/strata-2013/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>/docs/learning-resources/presentations/strata-2013/</guid><description>
 &lt;p>&lt;a href="https://www.slideshare.net/julienledem/parquet-stratany-hadoopworld2013">Slides&lt;/a>&lt;/p></description></item><item><title>Docs: Configurations</title><link>/docs/file-format/configurations/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>/docs/file-format/configurations/</guid><description>
 &lt;h3 id="row-group-size">Row Group Size&lt;/h3>
 &lt;p>Larger row groups allow for larger column chunks which makes it
@@ -1089,9 +1069,19 @@ example, strings are stored as byte arrays (binary) with a UTF8 annotation.
 These annotations define how to further decode and interpret the data.
 Annotations are stored as &lt;code>LogicalType&lt;/code> fields in the file metadata and are
 documented in LogicalTypes.md.&lt;/p></description></item><item><title>Docs: Metadata</title><link>/docs/file-format/metadata/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>/docs/file-format/metadata/</guid><description>
-&lt;p>There are three types of metadata: file metadata, column (chunk) metadata and page
-header metadata. All thrift structures are serialized using the TCompactProtocol.&lt;/p>
-&lt;p>&lt;img alt="File Layout" src="/images/FileFormat.gif">&lt;/p></description></item><item><title>Docs: Nested Encoding</title><link>/docs/file-format/nestedencoding/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>/docs/file-format/nestedencoding/</guid><description>
+&lt;p>There are two types of metadata: file metadata, and page header metadata.&lt;/p>
+&lt;p>All thrift structures are serialized using the TCompactProtocol. The full
+definition of these structures is given in the Parquet
+&lt;a href="https://github.com/apache/parquet-format/blob/master/src/main/thrift/parquet.thrift">Thrift definition&lt;/a>.&lt;/p>
+&lt;h2 id="file-metadata">File metadata&lt;/h2>
+&lt;p>In the diagram below, file metadata is described by the &lt;code>FileMetaData&lt;/code>
+structure. This file metadata provides offset and size information useful
+when navigating the Parquet file.&lt;/p>
+&lt;p>&lt;img alt="Parquet Metadata format" src="/images/FileMetaData.svg">&lt;/p>
+&lt;h2 id="page-header">Page header&lt;/h2>
+&lt;p>Page header metadata (&lt;code>PageHeader&lt;/code> and children in the diagram) is stored
+in-line with the page data, and is used in the reading and decoding of data.&lt;/p>
+&lt;p>&lt;img alt="Parquet PageHeader format" src="/images/PageHeader.svg">&lt;/p></description></item><item><title>Docs: Nested Encoding</title><link>/docs/file-format/nestedencoding/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>/docs/file-format/nestedencoding/</guid><description>
 &lt;p>To encode nested columns, Parquet uses the Dremel encoding with definition and
 repetition levels. Definition levels specify how many optional fields in the
 path for the column are defined. Repetition levels specify at what repeated field
@@ -1226,7 +1216,7 @@ chosen as follows:&lt;/p>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">unsigned&lt;/span> &lt;span style="color:#000">int64&lt;/span> &lt;span style="color:#000">z_as_64_bit&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#000">z&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">unsigned&lt;/span> &lt;span style="color:#000">int32&lt;/span> &lt;span style="color:#000">i&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">h_top_bits&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">*&lt;/span> &lt;span style="color:#000">z_as_64_bit&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">&amp;gt;&amp;gt;&lt;/span> &lt;span style="color:#0000cf;font-weight:bold">32&lt;/span>&lt;span style="color:#000;font-weight:bold">;&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The first line extracts the most significant 32 bits from &lt;code>h&lt;/code> and
-assignes them to a 64-bit unsigned integer. The second line is
+assigns them to a 64-bit unsigned integer. The second line is
 simpler: it just sets an unsigned 64-bit value to the same value as
 the 32-bit unsigned value &lt;code>z&lt;/code>. The purpose of having both &lt;code>h_top_bits&lt;/code>
 and &lt;code>z_as_64_bit&lt;/code> be 64-bit values is so that their product is a
@@ -1262,7 +1252,7 @@ unsigned int64 i = ((x &amp;gt;&amp;gt; 32) * filter.numberOfBlocks()) &amp;gt;&
 block b = filter.getBlock(i);
 return block_check(b, (unsigned int32)x)
 }
-&lt;/code>&lt;/pre>&lt;p>The use of blocks is from Putze et al.&amp;rsquo;s &lt;a href="http://algo2.iti.kit.edu/documents/cacheefficientbloomfilters-jea.pdf">Cache-, Hash- and
+&lt;/code>&lt;/pre>&lt;p>The use of blocks is from Putze et al.&amp;rsquo;s &lt;a href="https://www.cs.amherst.edu/~ccmcgeoch/cs34/papers/cacheefficientbloomfilters-jea.pdf">Cache-, Hash- and
 Space-Efficient Bloom
 filters&lt;/a>&lt;/p>
 &lt;p>To use an SBBF for values of arbitrary Parquet types, we apply a hash
@@ -1273,13 +1263,13 @@ with a seed of 0 and &lt;a href="https://github.com/Cyan4973/xxHash/blob/v0.7.0/
 &lt;h4 id="sizing-an-sbbf">Sizing an SBBF&lt;/h4>
 &lt;p>The &lt;code>check&lt;/code> operation in SBBFs can return &lt;code>true&lt;/code> for an argument that
 was never inserted into the SBBF. These are called &amp;ldquo;false
-positives&amp;rdquo;. The &amp;ldquo;false positive probabilty&amp;rdquo; is the probability that
+positives&amp;rdquo;. The &amp;ldquo;false positive probability&amp;rdquo; is the probability that
 any given hash value that was never &lt;code>insert&lt;/code>ed into the SBBF will
 cause &lt;code>check&lt;/code> to return &lt;code>true&lt;/code> (a false positive). There is not a
 simple closed-form calculation of this probability, but here is an
 example:&lt;/p>
 &lt;p>A filter that uses 1024 blocks and has had 26,214 hash values
-&lt;code>insert&lt;/code>ed will have a false positive probabilty of around 1.26%. Each
+&lt;code>insert&lt;/code>ed will have a false positive probability of around 1.26%. Each
 of those 1024 blocks occupies 256 bits of space, so the total space
 usage is 262,144. That means that the ratio of bits of space to hash
 values is 10-to-1. Adding more hash values increases the denominator
@@ -1501,4 +1491,728 @@ indices, and page offsets to scan in each column. The reader can then
 initialize a scanner for each column and fast forward them to the start row of
 the scan.&lt;/p>
 &lt;p>The &lt;code>min_values&lt;/code> and &lt;code>max_values&lt;/code> are calculated based on the &lt;code>column_orders&lt;/code>
-field in the &lt;code>FileMetaData&lt;/code> struct of the footer.&lt;/p></description></item></channel></rss>
+field in the &lt;code>FileMetaData&lt;/code> struct of the footer.&lt;/p></description></item><item><title>Docs: Implementation status</title><link>/docs/file-format/implementationstatus/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>/docs/file-format/implementationstatus/</guid><description>
+&lt;p>This page summarizes the features supported by different Parquet
+implementations.&lt;/p>
+&lt;p>&lt;em>Note&lt;/em>: This is a work in progress and we would welcome help expanding its scope.&lt;/p>
+&lt;h3 id="legend">Legend&lt;/h3>
+&lt;p>The value in each box means:&lt;/p>
+&lt;ul>
+&lt;li>✅: supported&lt;/li>
+&lt;li>❌: not supported&lt;/li>
+&lt;li>(R/W): partial reader/writer only support&lt;/li>
+&lt;li>(blank) no data&lt;/li>
+&lt;/ul>
+&lt;p>Implementations:&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://github.com/apache/arrow/tree/main/cpp/src/parquet">arrow&lt;/a> (C++)&lt;/li>
+&lt;li>&lt;a href="https://github.com/apache/parquet-java">parquet-java&lt;/a> (Java)&lt;/li>
+&lt;li>&lt;a href="https://github.com/apache/arrow-go/tree/main/parquet">arrow-go&lt;/a> (Go)&lt;/li>
+&lt;li>&lt;a href="https://github.com/apache/arrow-rs/blob/main/parquet/README.md">arrow-rs&lt;/a> (Rust)&lt;/li>
+&lt;li>&lt;a href="https://github.com/rapidsai/cudf">cudf&lt;/a> (cuDF C++)&lt;/li>
+&lt;li>&lt;a href="https://github.com/hyparam/hyparquet">hyparquet&lt;/a> (JavaScript)&lt;/li>
+&lt;li>&lt;a href="https://github.com/duckdb/duckdb">duckdb&lt;/a> (C++)&lt;/li>
+&lt;/ul>
+&lt;h3 id="physical-types">Physical types&lt;/h3>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Data type&lt;/th>
+&lt;th>arrow&lt;/th>
+&lt;th>parquet-java&lt;/th>
+&lt;th>arrow-go&lt;/th>
+&lt;th>arrow-rs&lt;/th>
+&lt;th>cudf&lt;/th>
+&lt;th>hyparquet&lt;/th>
+&lt;th>duckdb&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>BOOLEAN&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>INT32&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>INT64&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>INT96 (1)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>FLOAT&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>DOUBLE&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>BYTE_ARRAY&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>FIXED_LEN_BYTE_ARRAY&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;ul>
+&lt;li>(1) This type is deprecated, but as of 2024 it&amp;rsquo;s common in currently produced parquet files&lt;/li>
+&lt;/ul>
+&lt;h3 id="logical-types">Logical types&lt;/h3>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Data type&lt;/th>
+&lt;th>arrow&lt;/th>
+&lt;th>parquet-java&lt;/th>
+&lt;th>arrow-go&lt;/th>
+&lt;th>arrow-rs&lt;/th>
+&lt;th>cudf&lt;/th>
+&lt;th>hyparquet&lt;/th>
+&lt;th>duckdb&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>STRING&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>ENUM&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅ (1)&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>UUID&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅ (1)&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>8, 16, 32, 64 bit signed and unsigned INT&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>DECIMAL (INT32)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>DECIMAL (INT64)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>DECIMAL (BYTE_ARRAY)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>DECIMAL (FIXED_LEN_BYTE_ARRAY)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>DATE&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>TIME (INT32)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>TIME (INT64)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>TIMESTAMP (INT64)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>INTERVAL&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅ (1)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>JSON&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅ (1)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅ (1)&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>BSON&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>✅ (1)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅ (1)&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>LIST&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>MAP&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>UNKNOWN (always null)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>FLOAT16&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅ (1)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;ul>
+&lt;li>(1) Only supported to use its annotated physical type&lt;/li>
+&lt;/ul>
+&lt;h3 id="encodings">Encodings&lt;/h3>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Encoding&lt;/th>
+&lt;th>arrow&lt;/th>
+&lt;th>parquet-java&lt;/th>
+&lt;th>arrow-go&lt;/th>
+&lt;th>arrow-rs&lt;/th>
+&lt;th>cudf&lt;/th>
+&lt;th>hyparquet&lt;/th>
+&lt;th>duckdb&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>PLAIN&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>PLAIN_DICTIONARY&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>RLE_DICTIONARY&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>RLE&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>BIT_PACKED (deprecated)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>❌ (1)&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>DELTA_BINARY_PACKED&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>DELTA_LENGTH_BYTE_ARRAY&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>DELTA_BYTE_ARRAY&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>BYTE_STREAM_SPLIT&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;ul>
+&lt;li>(1) Partial read support, but only in the case of level data with a bitwidth of 0&lt;/li>
+&lt;/ul>
+&lt;h3 id="compressions">Compressions&lt;/h3>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Compression&lt;/th>
+&lt;th>arrow&lt;/th>
+&lt;th>parquet-java&lt;/th>
+&lt;th>arrow-go&lt;/th>
+&lt;th>arrow-rs&lt;/th>
+&lt;th>cudf&lt;/th>
+&lt;th>hyparquet&lt;/th>
+&lt;th>duckdb&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>UNCOMPRESSED&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>BROTLI&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>GZIP&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>LZ4 (deprecated)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>LZ4_RAW&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>LZO&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>SNAPPY&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>ZSTD&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;h3 id="other-format-level-features">Other format level features&lt;/h3>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Feature&lt;/th>
+&lt;th>arrow&lt;/th>
+&lt;th>parquet-java&lt;/th>
+&lt;th>arrow-go&lt;/th>
+&lt;th>arrow-rs&lt;/th>
+&lt;th>cudf&lt;/th>
+&lt;th>hyparquet&lt;/th>
+&lt;th>duckdb&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>xxHash-based bloom filters&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Bloom filter length (1)&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Statistics min_value, max_value&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Page index&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Page CRC32 checksum&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Modular encryption&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>✅ (*)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Size statistics (2)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;ul>
+&lt;li>
+&lt;p>(1) In parquet.thrift: ColumnMetaData-&amp;gt;bloom_filter_length&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>(2) In parquet.thrift: ColumnMetaData-&amp;gt;size_statistics&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>(*) Partial support&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="high-level-data-apis-for-parquet-feature-usage">High level data APIs for Parquet feature usage&lt;/h3>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Feature&lt;/th>
+&lt;th>arrow&lt;/th>
+&lt;th>parquet-java&lt;/th>
+&lt;th>arrow-go&lt;/th>
+&lt;th>arrow-rs&lt;/th>
+&lt;th>cudf&lt;/th>
+&lt;th>hyparquet&lt;/th>
+&lt;th>duckdb&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>External column data (1)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>(W)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Row group &amp;ldquo;Sorting column&amp;rdquo; metadata (2)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>(W)&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>(R)&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Row group pruning using statistics&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅ (*)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Row group pruning using bloom filter&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅ (*)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Reading select columns only&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>Page pruning using statistics&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>✅ (*)&lt;/td>
+&lt;td>✅&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;td>❌&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;ul>
+&lt;li>
+&lt;p>(1) In parquet.thrift: ColumnChunk-&amp;gt;file_path&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>(2) In parquet.thrift: RowGroup-&amp;gt;sorting_columns&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>(*) Partial Support&lt;/p>
+&lt;/li>
+&lt;/ul></description></item></channel></rss>
